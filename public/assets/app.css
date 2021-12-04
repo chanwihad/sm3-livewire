@@ -1,0 +1,230 @@
+.header-right-info .navbar-nav {
+    margin-right: 40px !important;
+}
+
+.header-right-info ul.header-right-menu li .dropdown-header-top.author-log {
+    width: 150px !important;
+    margin-top: 10px;
+    margin-left: -10px;
+}
+
+@media (max-width: 767px) {
+    .header-right-info .navbar-nav {
+        margin-right: auto !important;
+    }
+}
+
+.mCustomScrollBox {
+    margin-top: 20px !important;
+}
+
+.sidebar-nav .metismenu {
+    margin: 0px 0px 20px 15px !important;
+}
+
+.sidebar-nav .metismenu a {
+    padding: 15px 20px !important;
+    border-radius: 20px 0px 0px 20px;
+}
+
+#sidebar.active .sidebar-nav .metismenu {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.sidebar-nav .metismenu ul a {
+    margin-left: 30px !important;
+}
+
+#sidebar.active .metismenu li .submenu-angle li a {
+    margin-left: 0px !important;
+}
+
+#sidebar.active .sidebar-nav .metismenu a:hover,
+#sidebar.active .sidebar-nav .metismenu a:focus,
+#sidebar.active .sidebar-nav .metismenu a:active {
+    margin: 10px !important;
+    border-radius: 13px !important;
+}
+
+.header-top-area {
+    background: #1e2631 !important;
+}
+
+.menu-switcher-pro .btn-info:active,
+.menu-switcher-pro .btn-info:focus,
+.menu-switcher-pro .btn-info:hover,
+.menu-switcher-pro .btn-info:visited,
+.header-drl-controller-btn.btn-info:active:focus {
+    background: none !important;
+}
+
+.footer-copyright-area {
+    background: #1e2631 !important;
+}
+
+.margin-judul {
+    margin: 35px 25px 35px 25px !important;
+}
+
+.sm3-container {
+    margin: 0px 25px 25px 25px !important;
+}
+
+.sm3-card {
+    background: white;
+    padding: 30px;
+    height: auto;
+    border-radius: 20px;
+    margin: 0px !important;
+    box-shadow: 1px 5px 10px 0px #e0e0e0;
+}
+
+.card-desc {
+    background: #e3e3e3;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.db-flex {
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    align-items: center;
+}
+
+.flex-kanan {
+    margin-left: auto;
+}
+
+.db.img {
+    width: 75% !important;
+}
+
+.icon-card {
+    border-radius: 8px;
+    background: white;
+    height: 40px;
+    width: 40px;
+    font-size: 25px;
+    padding: 2px 13px;
+    margin-left: auto;
+}
+
+.icon-card2 {
+    border-radius: 8px;
+    background: #1e2631;
+    height: 40px;
+    width: 40px;
+    font-size: 25px;
+    color: white;
+    padding: 2px 13px;
+    margin-left: auto;
+}
+
+.span-icon {
+    height: 40px;
+    width: 40px;
+    padding: 10px;
+}
+
+.span-share {
+    height: 34px;
+    width: 34px;
+    padding: 8px;
+    background: #1e2631;
+    border-color: #1e2631;
+    color: white;
+    border-radius: 8px 0px 0px 8px;
+}
+
+.btn-share {
+    border-radius: 0px 8px 8px 0px;
+    background: white;
+    border-color: #1e2631;
+    color: #1e2631;
+}
+
+.btn-kanan {
+    float: right;
+    margin-left: 10px;
+}
+
+.nav-item {
+    margin-right: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.db-btn {
+    border-radius: 20px;
+    padding: 10px 20px;
+    background: #1e2631;
+    border-color: #1e2631;
+}
+
+.db-h1 {
+    margin: 0px;
+    font-size: 60px;
+}
+
+.db-p {
+    margin: 0px;
+    font-size: 20px;
+}
+
+.img-pas-foto {
+    width: 50%;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    border-color: white;
+    border-width: 10px;
+}
+
+.card-akun-1 {
+    border-radius: 10px 0px 0px 10px;
+    text-align: center;
+    background: #e9efe6;
+}
+
+.card-akun-2 {
+    border-radius: 0px 10px 10px 0px;
+}
+
+.badge-akun {
+    background: rgb(114, 22, 22);
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-left: auto;
+}
+
+.badge-pegawai {
+    background: rgb(114, 22, 22);
+    font-size: 18px;
+    padding: 12px 25px;
+    border-radius: 30px;
+}
+
+@media (max-width: 768px) {
+    .db-img {
+        margin-top: 50px;
+    }
+    .flex-column {
+        flex-direction: column !important;
+        row-gap: 20px !important;
+    }
+    .db-info .icon-card2 {
+        display: none;
+    }
+    .db-p {
+        margin: 0px;
+        font-size: 15px;
+    }
+    .card-akun-1 {
+        border-radius: 10px;
+    }
+    .card-akun-2 {
+        border-radius: 10px;
+        width: -webkit-fill-available;
+    }
+}

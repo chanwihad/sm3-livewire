@@ -1,0 +1,33 @@
+.ftco-section {
+    padding: 3em 0 !important;
+}
+
+.wrap {
+    border-radius: 25px !important;
+}
+
+@media (max-width: 768px) {
+    .img-fluid {
+        display: none;
+    }
+    .img-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100px;
+        max-height: 200px;
+    }
+    .ftco-section {
+        margin-top: 100px;
+    }
+    .justify-content-center {
+        padding: 0px 15px;
+    }
+}
+
+@media (min-width: 768px) {
+    .img-header {
+        display: none;
+    }
+}
