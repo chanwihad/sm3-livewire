@@ -179,6 +179,11 @@ class meeting extends Model
         return 'tutup';
     }
 
+    public static function getTotalHadir($division)
+    {
+        return meeting::where('participant', 'like', '%Rapat Besar%')->orWhere('participant', 'like', '%' . $division . '%')->count();
+    }
+
     public function isBelumDibuka(): bool
     {
         return $this->getStatus() == 'belum dibuka';

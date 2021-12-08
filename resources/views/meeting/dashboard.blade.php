@@ -31,9 +31,9 @@
             <div class="db-flex flex-column">
                 <div class="col-md-6 sm3-card">
                     <div class="db-flex db-info">
-                        <h1 class="db-h1">02</h1>
+                        <h1 class="db-h1">{{ $jumlah }}</h1>
                         <p class="db-p">dari</p>
-                        <h1 class="db-h1">05</h1>
+                        <h1 class="db-h1">{{ $total }}</h1>
                         <p class="db-p">Agenda Rapat<br>Berhasil Diikuti</p>
                         <div class="icon-card2">
                             <i class="fa fa-angle-double-right"></i>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-md-6 sm3-card">
                     <div class="db-flex db-info">
-                        <h1 class="db-h1" style="margin-right:10px">75%</h1>
+                        <h1 class="db-h1" style="margin-right:10px">{{ $persen }}%</h1>
                         <p class="db-p">Persentase Kehadiran<br>Mengikuti Agenda Rapat</p>
                         <div class="icon-card2">
                             <i class="fa fa-angle-double-right"></i>

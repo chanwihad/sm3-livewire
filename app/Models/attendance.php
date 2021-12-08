@@ -29,6 +29,11 @@ class attendance extends Model
         return Attendance::where('id', $id)->update(['status' => $status]);
     }
 
+    public static function getJumlahHadir($id)
+    {
+        return Attendance::where('ref_user_id', $id)->count();
+    }
+
     public function tampilJam(): string
     {
         if (empty($this->created_at)) {

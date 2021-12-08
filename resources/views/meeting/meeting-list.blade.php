@@ -22,10 +22,6 @@
                         <div class="db-flex">
                             <div class="db-flex" style="column-gap: 0px;">
                                 <span class="input-group-addon span-share"><i class="fa fa-clock-o"></i></span>
-                                <a class="btn btn-warning btn-share" href="">Export to PDF</a>
-                            </div>
-                            <div class="db-flex" style="column-gap: 0px;">
-                                <span class="input-group-addon span-share"><i class="fa fa-clock-o"></i></span>
                                 <a href="{{route('meetingCreate')}}" class="btn btn-primary btn-share" role="button" aria-disabled="true">Tambah Rapat</a>
                             </div>
                         </div>

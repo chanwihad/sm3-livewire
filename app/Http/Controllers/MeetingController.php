@@ -32,10 +32,17 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        if (\Auth::user()) {
+        $user = \Auth::user();
+        if ($user) {
+            $att = Attendance::getJumlahHadir($user->id);
+            $meet = Meeting::getTotalHadir($user->division);
+            $persen = $att / $meet * 100;
             return view('meeting.dashboard', [
                 'data' => Meeting::all(),
-                'user' => \Auth::user()
+                'user' => $user,
+                'jumlah' => $att,
+                'total' => $meet,
+                'persen' => number_format($persen)
             ]);
         }
     }
@@ -117,7 +124,7 @@ class MeetingController extends Controller
         $data['time'] = $data['time_start'] . ' - ' . $data['time_end'];
         unset($data['time_start']);
         unset($data['time_end']);
-        $data['date'] = date('Y-m-d', strtotime( $data['date']));
+        $data['date'] = date('Y-m-d', strtotime($data['date']));
         // dd($data);
         if ($request->get('id') == null) {
             $meeting = Meeting::meetingSaveCreate($data);
@@ -227,8 +234,8 @@ class MeetingController extends Controller
             'notes' => 'required',
             'meeting_id' => ''
         ]);
-        $meeting = Note::noteSave($data,$request->meeting_id);
-        if($meeting){
+        $meeting = Note::noteSave($data, $request->meeting_id);
+        if ($meeting) {
             return back()->with('success', 'Berhasil menyimpan data notulensi baru');
         }
         return abort(404, "Meeting tidak ditemukan");
