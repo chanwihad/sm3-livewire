@@ -31,6 +31,9 @@
         @yield('akun-saya')
         @yield('akun-edit')
 
+        @yield('meeting-create')
+        @yield('attend-update')
+
     </div>
 
     <!-- FOOTER -->

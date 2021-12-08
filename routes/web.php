@@ -23,6 +23,10 @@ use App\Http\Controllers\MeetingController;
 //     });
 //     return List('dashboard');
 // })->name('dashboard');
+
+Route::get('/attend', function () {
+    return View('meeting/attend-update');
+})->name('create');
 Auth::routes();
 Route::middleware(['auth:sanctum'])->group(function () {
     
@@ -36,13 +40,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/management/meeting/{id}/delete', [App\Http\Controllers\MeetingController::class, 'meetingDelete'])->name('meetingDelete');
     Route::post('/management/meeting/save', [App\Http\Controllers\MeetingController::class, 'meetingSave'])->name('meetingSave');
     
-    //ATTENDENCE ROUTE
+    //AGENDA ROUTE
     Route::get('/meeting', [App\Http\Controllers\MeetingController::class, 'agendaList'])->name('agendaList');
     Route::get('/meeting/{id}/detail', [App\Http\Controllers\MeetingController::class, 'agendaDetail'])->name('agendaDetail');
 
     //ABSEN ROUET
     Route::get('/absen/create', [App\Http\Controllers\MeetingController::class, 'absenCreate'])->name('absenCreate');
-    Route::post('/absen/update', [App\Http\Controllers\MeetingController::class, 'absenUpdate'])->name('absenUpdate');
+    Route::get('/absen/update', [App\Http\Controllers\MeetingController::class, 'absenUpdate'])->name('absenUpdate');
+    Route::post('/absen/save', [App\Http\Controllers\MeetingController::class, 'absenSave'])->name('absenSave');
 
     //PROFILE ROUTE
     Route::get('/profile/detail', [App\Http\Controllers\UserController::class, 'profileDetail'])->name('profileDetail');
@@ -53,4 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/management/user', [App\Http\Controllers\UserController::class, 'userList'])->name('userList');
     Route::get('/manamegement/user/{id}/update', [App\Http\Controllers\UserController::class, 'userUpdate'])->name('userUpdate');
     Route::post('/management/user/save', [App\Http\Controllers\UserController::class, 'userSave'])->name('userSave');
+    
+    //NOTE ROUTE
+    Route::post('/management/note/save', [App\Http\Controllers\MeetingController::class, 'noteSave'])->name('noteSave');
 });

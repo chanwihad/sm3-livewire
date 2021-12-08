@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DB;
@@ -72,6 +73,7 @@ class UserController extends Controller
         $user = \Auth::user();
         if ($user->hasRole('admin')) {
             $data = User::getAllUser();
+            // $jumlah = Attendance::where()
             return view('/user/user-list', ['data' => $data, 'user' => $user]);
         }
         return abort(403, "Anda tidak memiliki hak akses");

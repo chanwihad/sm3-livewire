@@ -22,10 +22,10 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Detail Agenda Rapat <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="#detailAgenda">Detail Agenda Rapat <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Notulensi Rapat</a>
+                                <a class="nav-link" href="#detailNotulensi">Notulensi Rapat</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Daftar Hadir Peserta Rapat</a>
@@ -42,7 +42,7 @@
 </div>
 
 <!-- =================DETAIL RAPAT================== -->
-<div class="sm3-container">
+<div class="sm3-container" id="detailAgenda">
     <div class="row">
         <div class="col-md-12">
             <div class="sm3-card">
@@ -148,7 +148,7 @@
 </div>
 
 <!-- =================NOTULENSI RAPAT================== -->
-<div class="sm3-container">
+<div class="sm3-container" id="detailNotulensi"> {{ url()->current() }} <br> {{ Request::url() }}
     <div class="row">
         <div class="col-md-12">
             <div class="sm3-card">
@@ -156,23 +156,32 @@
                     <h1>Notulensi Agenda Rapat</h1> <br>
                     <div style="margin-left:auto;">
                         <div class="db-flex">
-                            <div class="db-flex" style="column-gap: 0px;">
-                                <span class="input-group-addon span-share"><i class="fa fa-clock-o"></i></span>
-                                <a class="btn btn-warning btn-share" href="">Export to PDF</a>
-                            </div>
                             @if($info == 'Meeting')
                             <div class="db-flex" style="column-gap: 0px;">
                                 <span class="input-group-addon span-share"><i class="fa fa-clock-o"></i></span>
-                                <a href="" class="btn btn-primary btn-share" role="button" aria-disabled="true">Tambah Notulensi</a>
+                                <button type="submit" class="btn btn-primary btn-share" role="button" aria-disabled="true">Simpan Notulensi</a>
                             </div>
                             @endif
                         </div>
                     </div>
                 </div> <br>
-                <div class="card card-desc">
-                    <h5>Notulensi : </h5>
-                    <p style="margin: 0px;"> @isset($notulensi) {{ $notulensi->notes }} @endisset </p>
-                </div><br>
+
+                @if($info == 'Meeting')
+                <form action="{{route('noteSave')}}" method="post">
+                    <input type="hidden" name="meeting_id" id="meeting_id" value="{{$detail->id}}" />
+                    {{ csrf_field() }}
+                    <textarea id="editor1" name="notes" value="@isset($notulensi) {{ $notulensi->notes }} @endisset"> @isset($notulensi) {!! old("notes",$notulensi->notes) !!} @endisset</textarea>
+                    <div class="db-flex" style="column-gap: 0px;">
+                        <span class="input-group-addon span-share"><i class="fa fa-clock-o"></i></span>
+                        <button type="submit" class="btn btn-primary btn-share" role="button" aria-disabled="true">Simpan Notulensi</a>
+                    </div>
+                </form>
+                <br>
+                @endif
+
+                @if($info == 'Agenda')
+                <textarea id="editor1" name="notes" value="@isset($notulensi) {{ $notulensi->notes }} @endisset"> @isset($notulensi) {!! old("notes",$notulensi->notes) !!} @endisset</textarea> <br>
+                @endif
 
                 <div class="card card-desc">
                     <h5>Dokumentasi Foto : </h5>
@@ -192,10 +201,6 @@
                 <div class="db-flex">
                     <h1>Daftar Hadir Peserta Rapat</h1> <br>
 
-                    <div class="db-flex flex-kanan" style="column-gap: 0px;">
-                        <span class="input-group-addon span-share"><i class="fa fa-clock-o"></i></span>
-                        <a class="btn btn-warning btn-share" href="">Export to PDF</a>
-                    </div>
                 </div> <br>
 
                 <div class="table-responsive">
@@ -228,47 +233,12 @@
                                 </td>
                                 @if($info == 'Meeting')
                                 <td>
-                                <form action="{{route('absenUpdate')}}" method="post">
-                                                    {{ csrf_field() }}
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-warning fa fa-edit" data-toggle="modal" data-target="#exampleModalCenter"></button>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle">Ubah Daftar Hadir Peserta Rapat</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                
-                                                    <div class="modal-body">
-                                                        <div class="form-group row" style="text-align: left;">
-                                                            <label for="colFormLabel" class="col-sm-12 col-form-label">Status Kehadiran Rapat</label> <br>
-                                                            <input type="hidden" name="att" id="att" value="{{ $pesertas->name }}" />
-                                                            <div class="row">
-                                                                <div class="col-sm-3" style="margin-left: 15px;">
-                                                                    <input type="radio" id="status" name="status" value="1"> Hadir<br>
-                                                                    <input type="radio" id="status" name="status" value="2"> Sakit<br>
-                                                                    <br>
-                                                                </div>
-                                                                <div class="col-sm-5" style="margin-left: 15px;">
-                                                                    <input type="radio" id="status" name="status" value="3"> Izin<br>
-                                                                    <input type="radio" id="status" name="status" value="0"> Tidak Hadir
-                                                                    <br>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-                                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                                    </div>
-                                               
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <form action="{{route('absenUpdate')}}" method="get">
+                                        <input type="hidden" name="id" id="id" value="{{ $pesertas->attendances_id }}" />
+                                        {{ csrf_field() }}
+                                        <!-- Button trigger modal -->
+                                        <button type="submit" class="btn btn-warning fa fa-edit" data-toggle="modal" data-target="#exampleModalCenter"></button>
+
                                     </form>
                                 </td>
                                 @endif
@@ -283,6 +253,7 @@
 </div>
 
 <script>
+    CKEDITOR.replace('editor1');
     $(document).ready(function() {
         $('#daftar-absen').DataTable({
             dom: 'Bfrtip',

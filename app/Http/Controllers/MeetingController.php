@@ -93,13 +93,13 @@ class MeetingController extends Controller
             'title' => 'required',
             'description' => 'required',
             'date' => 'required|date',
-            'time_start' => 'date_format:H:i|before:time_end',
-            'time_end' => 'date_format:H:i|after:time_start',
+            'time_start' => 'required|date_format:H:i|before:time_end',
+            'time_end' => 'required|date_format:H:i|after:time_start',
             'place' => 'required',
-            // 'creator' => 'required',
             'participant' => 'required',
             'status' => 'required',
         ]);
+
         // $validator = Validator::make($request->all(), $arrValidate);
         // if ($validator->fails()) {
         //     return redirect(route('meetingCreate'))
@@ -117,6 +117,7 @@ class MeetingController extends Controller
         $data['time'] = $data['time_start'] . ' - ' . $data['time_end'];
         unset($data['time_start']);
         unset($data['time_end']);
+        $data['date'] = date('Y-m-d', strtotime( $data['date']));
         // dd($data);
         if ($request->get('id') == null) {
             $meeting = Meeting::meetingSaveCreate($data);
@@ -198,15 +199,40 @@ class MeetingController extends Controller
     public function absenUpdate(Request $req)
     {
         $this->authorize('manage meeting', Meeting::class);
-        dd($req->att);
-        $ubah = Attendance::attendanceUpdate($req->id, $req->status);
-        if ($ubah) {
-            return back()->with('success', 'Berhasil mengubah data absen baru');
+        $attendance = Attendance::getAttendanceById($req->id);
+        if ($attendance) {
+            return view('/meeting/attend-update', ['data' => $attendance]);
         }
         return abort(404, "Meeting tidak ditemukan");
     }
 
+    public function absenSave(Request $req)
+    {
+        $this->authorize('manage meeting', Meeting::class);
+        $ubah = Attendance::attendanceUpdate($req->id, $req->status);
+        if ($ubah) {
+            return back()->with('success', 'Berhasil menyimpan data meeting baru');
+        }
+        return abort(404, "Meeting tidak ditemukan");
+    }
 
+    public function noteSave(Request $request)
+    {
+        $user = \Auth::user();
+        $this->authorize('manage meeting', Meeting::class);
+        if ($user->hasRole('pegawai')) {
+            return back()->with('error', 'Anda tidak memiliki akses');
+        }
+        $data = $request->validate([
+            'notes' => 'required',
+            'meeting_id' => ''
+        ]);
+        $meeting = Note::noteSave($data,$request->meeting_id);
+        if($meeting){
+            return back()->with('success', 'Berhasil menyimpan data notulensi baru');
+        }
+        return abort(404, "Meeting tidak ditemukan");
+    }
 
 
 
@@ -226,7 +252,6 @@ class MeetingController extends Controller
             // return abort(403, "User tidak memiliki hak akses");
         }
         $arrValidate = [
-            'meeting_id' => 'required',
             'notes' => 'required',
         ];
         $validator = Validator::make($request->all(), $arrValidate);

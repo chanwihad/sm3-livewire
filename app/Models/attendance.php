@@ -9,6 +9,11 @@ class attendance extends Model
 {
     use HasFactory;
 
+    public static function getAttendanceById($id)
+    {
+        return Attendance::where('id', $id)->orderBy('name', 'asc')->first();
+    }
+
     public static function getAttendanceByMeeting($id)
     {
         return Attendance::where('meeting_id', $id)->orderBy('name', 'asc')->get();
