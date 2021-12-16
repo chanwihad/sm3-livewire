@@ -20,10 +20,12 @@ class CreateMeetingsTable extends Migration
             $table->date('date');
             $table->string('time', 64)->nullable();
             $table->string('place')->nullable();
-            $table->tinyInteger('creator');
+            $table->unsignedBigInteger('creator');
             $table->string('participant', 1024)->nullable();
             $table->tinyInteger('status');
             $table->timestamps();
+
+            $table->foreign('creator')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

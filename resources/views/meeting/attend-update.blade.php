@@ -7,10 +7,9 @@
 <div class="margin-judul">
     <h1>Ubah Data Pegawai Sea Mobile Indonesia</h1>
     <ol class="breadcrumb" style="background: none; padding: 10px 0px;">
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">Manajemen Rapat</a></li>
-        <li><a href="#">Detail</a></li>
-        <li><a href="#">Daftar Hadir Peserta Rapat</a></li>
+        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ route('meetingList') }}">Manajemen Rapat</a></li>
+        <li><a href="{{ route('meetingDetail', $meeting->id) }}">Detail</a></li>
         <li class="active">Ubah</li>
     </ol>
 </div>
@@ -27,6 +26,15 @@
                         ubah rapat?? <br>
                         <form action="{{ route('absenSave') }}" method="post">
                             <input type="hidden" name="id" id="id" value="{{ $data->id }}" />
+                            @if(!$data->status)
+                            @if(isset($meeting)) <input type="hidden" name="meeting_id" id="meeting_id" value="{{ $meeting->id }}" /> @endisset
+                            <input type="hidden" name="ref_user_id" id="ref_user_id" value="{{ $data->id }}" />
+                            <input type="hidden" name="name" id="name" value="{{ $data->name }}" />
+                            <input type="hidden" name="email" id="email" value="{{ $data->email }}" />
+                            <input type="hidden" name="division" id="division" value="{{ $data->division }}" />
+                            <input type="hidden" name="position" id="position" value="{{ $data->position }}" />
+                            <input type="hidden" name="phone" id="phone" value="{{ $data->phone }}" />
+                            @endif
                             {{ csrf_field() }}
                             <button type="button" class="btn btn-warning fa fa-edit" data-toggle="modal" data-target="#exampleModalCenter"></button>
                             <!-- Modal -->
@@ -106,8 +114,7 @@
                         </div>
                     </div>
                     <br>
-                    <a href="" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Rapat</a>
-                    <a href="" class="btn btn-success btn-kanan" role="button" aria-disabled="true">Kembali</a>
+                    <a href="{{ url()->previous() }}" class="btn btn-success btn-kanan" role="button" aria-disabled="true">Kembali</a>
                 </div>
             </div>
         </div>

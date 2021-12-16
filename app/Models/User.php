@@ -64,10 +64,15 @@ class User extends Authenticatable
         return User::where('id', $id)->update(['email' => $email, 'phone' => $phone]);
     }
 
+    public static function getUserParticipant($division)
+    {
+        return User::where('division', $division)->get();
+    }
+
     public static function getUserAttendances($id, $participant)
     {
         return User::where('users.division', 'like', '%' . $participant . '%')
-            ->leftJoin('attendances', function ($join) use($id){
+            ->leftJoin('attendances', function ($join) use ($id) {
                 $join->on('users.id', '=', 'attendances.ref_user_id')
                     ->where('attendances.meeting_id', '=', $id);
             })
@@ -106,8 +111,26 @@ class User extends Authenticatable
         if ($this->status == 3) {
             return 'Izin';
         }
-        if($this->status == 0) {
+        if ($this->status == 0) {
             return 'Alpha';
         }
+    }
+
+    public function isAdministrator()
+    {
+        return $this->hasRole('admin');
+    }
+    
+    public function isAdminDivisi()
+    {
+        return $this->hasRole('admin divisi');
+    }
+
+    public static function getDataUser()
+    {
+        $data = User::leftJoin('attendances', 'users.id', '=', 'attendances.ref_user_id')
+        ->select('users.id', 'users.name', 'users.division', 'users.position', 'SELECT count("attendances.id") as total')
+        ->get();
+        return $data;
     }
 }

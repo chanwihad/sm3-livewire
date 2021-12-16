@@ -5,14 +5,15 @@
 @section('akun-edit')
 
 <div class="margin-judul">
-    <h1>Akun Saya</h1>
+    <h1>Profil Saya</h1>
     <ol class="breadcrumb" style="background: none; padding: 10px 0px;">
-        <li><a href="#">Dashboard</a></li>
-        <li class="active">Akun Saya</li>
+        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url()->previous() }}">Profil Saya</a></li>
+        <li class="active">Ubah Profil</li>
     </ol>
 </div>
 <form action="{{ route('profileSave') }}" method="post">
-{{ csrf_field() }}
+    {{ csrf_field() }}
     <div class="sm3-container">
         <div class="row">
             <div class="col-md-12">
@@ -23,9 +24,12 @@
                         <span class="badge badge-akun" data-toggle="tooltip" data-placement="bottom" title="Hak Akses"> {{ $role->name }}</span>
                     </div>
                     <div class="col-md-8 sm3-card card-akun-2">
+                        <div class="db-flex">
+                            <h3 style="margin: 0px;">Informasi Profil</h3>
+                        </div>
                         <hr><br>
                         <div class="form-group row" style="margin-bottom: 10px;">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Nama</label>
                             <div class="col-sm-10">
                                 <p>{{ $user->name }}</p>
                             </div>
@@ -56,9 +60,8 @@
                             </div>
                         </div>
                         <br>
-                        <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit" dusk="createMeeting"> save
-                        <!-- <a type="button " class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Rapat</a>
-                        <a href="" class="btn btn-success btn-kanan" role="button" aria-disabled="true">Kembali</a> -->
+                        <button type="submit" dusk="createMeeting" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Profil</button>
+                        <button href="{{ url()->previous() }}" class="btn btn-warning btn-kanan" aria-disabled="true">Kembali</button>
                         <br><br>
                     </div>
                 </div>

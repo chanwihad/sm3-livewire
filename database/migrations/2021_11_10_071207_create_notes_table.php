@@ -19,6 +19,8 @@ class CreateNotesTable extends Migration
             $table->string('notes', 1024);
             $table->string('documentation')->nullable();
             $table->timestamps();
+
+            $table->foreign('meeting_id')->references('id')->on('meetings')->onDelete('cascade');
         });
     }
 

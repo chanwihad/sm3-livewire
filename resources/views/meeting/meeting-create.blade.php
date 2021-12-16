@@ -5,11 +5,11 @@
 @section('manajemen-tambah')
 
 <div class="margin-judul">
-  <h1>Buat Rapat</h1>
+  <h1>Tambah Rapat</h1>
   <ol class="breadcrumb" style="background: none; padding: 10px 0px;">
-    <li><a href="#">Dashboard</a></li>
-    <li><a href="#">Manajemen Rapat</a></li>
-    <li class="active">Buat Rapat</li>
+    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li><a href="{{ route('meetingList') }}">Manajemen Rapat</a></li>
+    <li class="active">Tambah Rapat</li>
   </ol>
 </div>
 <form action="{{route('meetingSave')}}" method="POST">
@@ -23,18 +23,18 @@
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Judul Rapat</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="title" name="title" value="{{old("title")}}" placeholder="judul">
+              <input type="text" class="form-control" id="title" name="title" value="{{old("title")}}" placeholder="Judul">
               @if($errors->has('title'))
-              <p class="">{{$errors->first('title')}}</p>
+              <p class="alert-danger">{{$errors->first('title')}}</p>
               @endif
             </div>
           </div>
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Deskripsi Rapat</label>
             <div class="col-sm-10">
-              <textarea class="form-control" id="description" name="description" rows="3">{!! old('description') !!}</textarea>
+              <textarea class="form-control" id="description" name="description" rows="3" placeholder="Deskripsi">{!! old('description') !!}</textarea>
               @if($errors->has('description'))
-              <p class="">{{$errors->first('description')}}</p>
+              <p class="alert-danger">{{$errors->first('description')}}</p>
               @endif
             </div>
           </div>
@@ -47,8 +47,8 @@
                 <span class="input-group-addon span-icon"><i class="fa fa-calendar"></i></span>
               </div>
               @if($errors->has('date'))
-                    <p class="">{{$errors->first('date')}}</p>
-                    @endif
+              <p class="alert-danger">{{$errors->first('date')}}</p>
+              @endif
             </div>
           </div>
 
@@ -61,22 +61,21 @@
                   <button type="button" class="input-group-addon span-icon"><i class="fa fa-clock"></i></span>
 
                 </div>
+                @if($errors->has('time_start'))
+                <p class="alert-danger">{{$errors->first('time_start')}}</p>
+                @endif
                 <div class="timepicker"></div>
               </div>
-              @if($errors->has('time_start'))
-              <p class="">{{$errors->first('time_start')}}</p>
-              @endif
               <div class="form-group col-sm-6">
                 <div class="db-flex" style="column-gap: 0px;">
                   <input type="text" class="form-control" id="timepkr2" onclick="showpickers('timepkr2',24)" name="time_end" value="{{old("time_end")}}" placeholder="Selesai">
                   <button type="button" class="input-group-addon span-icon"><i class="fa fa-clock"></i></span>
-
                 </div>
+                @if($errors->has('time_end'))
+                <p class="alert-danger">{{$errors->first('time_end')}}</p>
+                @endif
                 <div class="timepicker"></div>
               </div>
-              @if($errors->has('time_end'))
-              <p class="">{{$errors->first('time_end')}}</p>
-              @endif
             </div>
           </div>
 
@@ -85,7 +84,7 @@
             <div class="col-sm-10">
               <input type="text" class="form-control" id="place" name="place" value="{{old("place")}}" placeholder="Lokasi Meeting">
               @if($errors->has('place'))
-              <p class="">{{$errors->first('place')}}</p>
+              <p class="alert-danger">{{$errors->first('place')}}</p>
               @endif
             </div>
           </div>
@@ -100,6 +99,7 @@
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Peserta</label>
             <div class="col-sm-10">
+              @if($user->isAdministrator())
               <select class="form-control" id="participant" name="participant">
                 <option value="" selected>Pilih Peserta Rapat</option>
                 <option value="Dewan Pengurus" @if(old("participant")=='Dewan Pengurus' ) selected @endif>Dewan Pengurus</option>
@@ -109,8 +109,13 @@
                 <option value="Divisi Keuangan" @if(old("participant")=='Divisi Keuangan' ) selected @endif>Divisi Keuangan</option>
                 <option value="Divisi IT" @if(old("participant")=='Divisi IT' ) selected @endif>Divisi IT</option>
               </select>
+              @else
+              <select class="form-control" id="participant" name="participant">
+                <option value="{{old("participant",$user->division)}}" selected>{{old("participant",$user->division)}}</option>
+              </select>
+              @endif
               @if($errors->has('participant'))
-              <p class="">{{$errors->first('participant')}}</p>
+              <p class="alert-danger">{{$errors->first('participant')}}</p>
               @endif
             </div>
           </div>
@@ -124,15 +129,13 @@
                 <option value="0" @if(old("status")=='0' )selected @endif>Tidak Aktif</option>
               </select>
               @if($errors->has('status'))
-              <p class="">{{$errors->first('status')}}</p>
+              <p class="alert-danger">{{$errors->first('status')}}</p>
               @endif <br>
             </div>
           </div>
-          <!-- <a href="" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Rapat</a>
-                    <a href="" class="btn btn-warning btn-kanan" role="button" aria-disabled="true">Kembali</a> -->
-          <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit" dusk="createMeeting">
-            Buat Acara
-          </button>
+          <button type="submit" dusk="createMeeting" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Tambah Agenda Rapat</button>
+          <button href="{{ route('meetingList') }}" class="btn btn-warning btn-kanan" role="button" aria-disabled="true">Kembali</button>
+
           <br><br>
 
         </div>

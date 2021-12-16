@@ -15,8 +15,8 @@ class CreateAttendancesTable extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->uuid('meeting_id')->nullable();
-            $table->integer('ref_user_id')->nullable();
+            $table->uuid('meeting_id')->nullable(false);
+            $table->unsignedBigInteger('ref_user_id');
             $table->string('name', 255);
             $table->string('email', 255);
             $table->string('division', 512);
@@ -25,6 +25,9 @@ class CreateAttendancesTable extends Migration
             $table->text('signature')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->timestamps();
+
+            $table->foreign('ref_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('meeting_id')->references('id')->on('meetings')->onDelete('cascade');
         });
     }
 

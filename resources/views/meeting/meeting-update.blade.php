@@ -5,11 +5,11 @@
 @section('manajemen-ubah')
 
 <div class="margin-judul">
-  <h1>Buat Rapat</h1>
+  <h1>Ubah Rapat</h1>
   <ol class="breadcrumb" style="background: none; padding: 10px 0px;">
-    <li><a href="#">Dashboard</a></li>
-    <li><a href="#">Manajemen Rapat</a></li>
-    <li class="active">Buat Rapat</li>
+    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li><a href="{{ route('meetingList') }}">Manajemen Rapat</a></li>
+    <li class="active">Ubah Rapat</li>
   </ol>
 </div>
 <form action="{{route('meetingSave')}}" method="POST">
@@ -23,9 +23,9 @@
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Judul Rapat</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="title" name="title" value="{{old("title",$data->title)}}" placeholder="judul">
+              <input type="text" class="form-control" id="title" name="title" value="{{old("title",$data->title)}}">
               @if($errors->has('title'))
-              <p class="">{{$errors->first('title')}}</p>
+              <p class="alert-danger">{{$errors->first('title')}}</p>
               @endif
             </div>
           </div>
@@ -34,45 +34,46 @@
             <div class="col-sm-10">
               <textarea class="form-control" id="description" name="description" rows="3">{!! old("description",$data->description) !!}</textarea>
               @if($errors->has('description'))
-              <p class="">{{$errors->first('description')}}</p>
+              <p class="alert-danger">{{$errors->first('description')}}</p>
               @endif
             </div>
           </div>
 
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Tanggal</label>
-            <div class='form-group col-sm-10 datepicker'>
+            <div class="col-sm-10">
               <div class="db-flex" style="column-gap: 0px;">
-                <input id="date" name="date" value="{{old("date",$data->date)}}" type="text" class="form-control hasDatepicker" placeholder="Date of Birth">
-                <!-- <input type='text' autocomplete="off" class="form-control" placeholder="yyyy-mm-dd" /> -->
+                <input type="text" class="form-control" id="usr1" name="date" value="{{old("date",$data->date)}}">
                 <span class="input-group-addon span-icon"><i class="fa fa-calendar"></i></span>
-                @if($errors->has('date'))
-                <p class="">{{$errors->first('date')}}</p>
-                @endif
               </div>
+              @if($errors->has('date'))
+              <p class="alert-danger">{{$errors->first('date')}}</p>
+              @endif
             </div>
           </div>
 
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Jam</label>
             <div class="db-flex">
-              <div class='form-group col-md-6 datepicker'>
+              <div class="form-group col-sm-6">
                 <div class="db-flex" style="column-gap: 0px;">
-                  <input type='text' autocomplete="off" class="form-control" id="time_start" name="time_start" value="{{old("time_start",$data->getTimeStart())}}" placeholder="Mulai" />
-                  <span class="input-group-addon span-icon"><i class="fa fa-clock-o"></i></span>
-                  @if($errors->has('time_start'))
-                  <p class="">{{$errors->first('time_start')}}</p>
-                  @endif
+                  <input type="text" class="form-control" id="timepkr" onclick="showpickers('timepkr',24)" name="time_start" value="{{old("time_start",$data->getTimeStart())}}">
+                  <button type="button" class="input-group-addon span-icon"><i class="fa fa-clock"></i></span>
                 </div>
+                @if($errors->has('time_start'))
+                <p class="alert-danger">{{$errors->first('time_start')}}</p>
+                @endif
+                <div class="timepicker"></div>
               </div>
-              <div class='form-group col-md-6 datepicker'>
+              <div class="form-group col-sm-6">
                 <div class="db-flex" style="column-gap: 0px;">
-                  <input type='text' autocomplete="off" class="form-control" id="time_end" name="time_end" value="{{old("time_end",$data->getTimeEnd())}}" placeholder="Selesai" />
-                  <span class="input-group-addon span-icon"><i class="fa fa-clock-o"></i></span>
-                  @if($errors->has('time_end'))
-                  <p class="">{{$errors->first('time_end')}}</p>
-                  @endif
+                  <input type="text" class="form-control" id="timepkr2" onclick="showpickers('timepkr2',24)" name="time_end" value="{{old("time_end",$data->getTimeEnd())}}">
+                  <button type="button" class="input-group-addon span-icon"><i class="fa fa-clock"></i></span>
                 </div>
+                @if($errors->has('time_start'))
+                <p class="alert-danger">{{$errors->first('time_start')}}</p>
+                @endif
+                <div class="timepicker"></div>
               </div>
             </div>
           </div>
@@ -80,15 +81,16 @@
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Tempat</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="place" name="place" value="{{old("place",$data->place)}}" placeholder="col-form-label">
+              <input type="text" class="form-control" id="place" name="place" value="{{old("place",$data->place)}}">
               @if($errors->has('place'))
-              <p class="">{{$errors->first('place')}}</p>
+              <p class="alert-danger">{{$errors->first('place')}}</p>
               @endif
             </div>
           </div>
           <div class="form-group row">
             <label for="colFormLabel" class="col-sm-2 col-form-label">Peserta</label>
             <div class="col-sm-10">
+            @if($user->isAdministrator())
               <select class="form-control" id="participant" name="participant">
                 <option selected>Pilih Peserta Rapat</option>
                 <option value="Dewan Pengurus" @if(old("participant",$data->participant) == 'Dewan Pengurus') selected @endif>Dewan Pengurus</option>
@@ -98,8 +100,13 @@
                 <option value="Divisi Keuangan" @if(old("participant",$data->participant) == 'Divisi Keuangan') selected @endif>Divisi Keuangan</option>
                 <option value="Divisi IT" @if(old("participant",$data->participant) == 'Divisi IT') selected @endif>Divisi IT</option>
               </select>
+              @else
+              <select class="form-control" id="participant" name="participant">
+                <option value="{{old("participant",$user->division)}}" selected>{{old("participant",$user->division)}}</option>
+              </select>
+              @endif
               @if($errors->has('participant'))
-              <p class="">{{$errors->first('participant')}}</p>
+              <p class="alert-danger">{{$errors->first('participant')}}</p>
               @endif
             </div>
           </div>
@@ -113,15 +120,12 @@
                 <option value="0" @if(old("status",$data->status) == '0')selected @endif>Tidak Aktif</option>
               </select>
               @if($errors->has('status'))
-              <p class="">{{$errors->first('status')}}</p>
+              <p class="alert-danger">{{$errors->first('status')}}</p>
               @endif
             </div>
           </div> <br>
-          <!-- <a href="" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Rapat</a>
-                    <a href="" class="btn btn-warning btn-kanan" role="button" aria-disabled="true">Kembali</a> -->
-          <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit" dusk="createMeeting">
-            Simpan
-          </button>
+          <button type="submit" dusk="createMeeting" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Agenda Rapat</button>
+          <button href="{{ route('meetingList') }}" class="btn btn-warning btn-kanan" role="button" aria-disabled="true">Kembali</button>
           <br><br>
 
         </div>
@@ -129,4 +133,85 @@
     </div>
   </div>
 </form>
+
+<script>
+  (function($) {
+    jQuery.fn.select2_e = function() {
+      $(this).each(function(n, element) {
+
+        //тут превращаем select в input              
+        var $element = $(element),
+          choices = $element.find('option').map(function(n, e) {
+            var $e = $(e);
+            return {
+              id: $e.val(),
+              text: $e.text()
+            };
+          }),
+          width = $element.width(),
+          $input = $('<input>', {
+            width: width
+          });
+        $element.hide().after($input);
+
+        //превратили
+        $input.select2({
+          query: function(query) {
+            var data = {},
+              i;
+            data.results = [];
+
+            // подтставим то что искали
+            if (query.term !== "") {
+              data.results.push({
+                id: query.term,
+                text: query.term
+              });
+            }
+
+            // добавим остальное
+            for (i = 0; i < choices.length; i++) {
+              if (choices[i].text.match(query.term) || choices[i].id.match(query.term)) data.results.push(choices[i]);
+            }
+            query.callback(data);
+          }
+        }).on('change', function() {
+          var value = $input.val();
+          $element.empty();
+          $element.append($('<option>').val(value))
+          $element.val(value).trigger('change');
+        });;
+        return $element;
+      });
+      return this;
+    }
+  })(jQuery);
+
+  //пример использования
+  jQuery(function($) {
+    $("#usr1").datepicker({
+      dateFormat: "yy-mm-dd",
+      // beforeShowDay: beforeShowDayHandler,
+      showOn: 'both',
+      onClose: function(dateText, inst) {
+        $(this).attr("disabled", false);
+      },
+      beforeShow: function(input, inst) {
+        $(this).attr("disabled", true);
+      }
+
+    });
+
+    console.log($('.testclass').select2_e().on('change', function() {
+      alert(this.value)
+    }));
+  });
+
+  $(function() {
+    $('.dates #usr1').datepicker({
+      'format': 'yy-mm-dd',
+      'autoclose': true
+    });
+  });
+</script>
 @endsection

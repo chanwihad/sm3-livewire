@@ -37,14 +37,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/management/meeting/{id}/detail', [App\Http\Controllers\MeetingController::class, 'meetingDetail'])->name('meetingDetail');
     Route::get('/management/meeting/create', [App\Http\Controllers\MeetingController::class, 'meetingCreate'])->name('meetingCreate');
     Route::get('/management/meeting/{id}/update', [App\Http\Controllers\MeetingController::class, 'meetingUpdate'])->name('meetingUpdate');
+    Route::get('/management/meeting/{id}/deleteConfirm', [App\Http\Controllers\MeetingController::class, 'meetingDeleteConfirm'])->name('meetingDeleteConfirm');
     Route::get('/management/meeting/{id}/delete', [App\Http\Controllers\MeetingController::class, 'meetingDelete'])->name('meetingDelete');
     Route::post('/management/meeting/save', [App\Http\Controllers\MeetingController::class, 'meetingSave'])->name('meetingSave');
+    
+    //NOTIFIKASI ROUTE
+    Route::get('/management/meeting/{id}/gmail', [App\Http\Controllers\MeetingController::class, 'notificationGmail'])->name('notificationGmail');
     
     //AGENDA ROUTE
     Route::get('/meeting', [App\Http\Controllers\MeetingController::class, 'agendaList'])->name('agendaList');
     Route::get('/meeting/{id}/detail', [App\Http\Controllers\MeetingController::class, 'agendaDetail'])->name('agendaDetail');
 
-    //ABSEN ROUET
+    //ABSEN ROUTE
     Route::get('/absen/create', [App\Http\Controllers\MeetingController::class, 'absenCreate'])->name('absenCreate');
     Route::get('/absen/update', [App\Http\Controllers\MeetingController::class, 'absenUpdate'])->name('absenUpdate');
     Route::post('/absen/save', [App\Http\Controllers\MeetingController::class, 'absenSave'])->name('absenSave');
@@ -61,4 +65,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
     //NOTE ROUTE
     Route::post('/management/note/save', [App\Http\Controllers\MeetingController::class, 'noteSave'])->name('noteSave');
+    Route::post('/management/image/save', [App\Http\Controllers\MeetingController::class, 'imageSave'])->name('imageSave');
+
+    
 });

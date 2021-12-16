@@ -17,11 +17,6 @@
         <div class="col-md-12">
             <div class="sm3-card">
 
-                <div class="db-flex btn-kanan" style="column-gap: 0px;">
-                    <span class="input-group-addon span-share"><i class="fa fa-clock-o"></i></span>
-                    <a class="btn btn-warning btn-share" href="">Export to PDF</a>
-                </div> <br><br><br>
-
                 <div class="table-responsive">
                     <table class="table table-bordered" id="daftar-user">
                         <thead>
@@ -69,7 +64,7 @@
         $('#daftar-user').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'excel', 'pdf', 'print'
             ]
         });
     });

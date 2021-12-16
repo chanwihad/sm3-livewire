@@ -41,6 +41,9 @@
 
     <!-- SCRIPT -->
     @include('layouts.script')
+    
+    @include('sweetalert::alert')
+
 </body>
 
 </html>

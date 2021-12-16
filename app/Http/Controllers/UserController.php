@@ -34,7 +34,7 @@ class UserController extends Controller
         }
     }
 
-    public function profileUpdate() 
+    public function profileUpdate()
     {
         $user = \Auth::user();
         if ($user) {
@@ -51,18 +51,18 @@ class UserController extends Controller
     public function profileSave(Request $request)
     {
         $user = \Auth::user();
-        $this->authorize('manage meeting', Meeting::class);
+        $this->authorize('manage meeting', User::class);
         // dd($request->email);
         // if ($user) {
-            // $data = (array) $request;
-            // $simpanUser = User::where('id', $user->id)->first();
-            $update = User::profileUpdate($user->id, $request->email, $request->phone);
-            // where('id', $user->id)
-            // ->update(['email' => $request->email, 'phone' => $request->phone]);
-            // $update->save();
-            if ($update) {
-                return redirect(route('profileDetail'))->with('success', 'Berhasil memperbarui data meeting');
-            }
+        // $data = (array) $request;
+        // $simpanUser = User::where('id', $user->id)->first();
+        $update = User::updateProfile($user->id, $request->email, $request->phone);
+        // where('id', $user->id)
+        // ->update(['email' => $request->email, 'phone' => $request->phone]);
+        // $update->save();
+        if ($update) {
+            return redirect(route('profileDetail'))->with('success', 'Berhasil memperbarui data meeting');
+        }
         // }
 
     }
@@ -84,10 +84,22 @@ class UserController extends Controller
         $this->authorize('manage role', User::class);
         $user = \Auth::user();
         if ($user->hasRole('admin')) {
+            //kodingan
             $user = User::getUser($Id);
             $userrole = Model_has_role::getRoleUser($Id);
             $role = Role::getAllRole();
-            return view('/user/user-update', ['data' => $userrole, 'user' => $user, 'role' => $role]);
+            //kehadiran
+            $att = Attendance::getJumlahHadir($user->id);
+            $meet = Meeting::getTotalHadir($user->division);
+            $persen = $att / $meet * 100;
+            return view('/user/user-update', [
+                'data' => $userrole,
+                'user' => $user,
+                'role' => $role,
+                'jumlah' => $att,
+                'total' => $meet,
+                'persen' => number_format($persen)
+            ]);
         }
         return abort(403, "Anda tidak memiliki hak akses");
     }

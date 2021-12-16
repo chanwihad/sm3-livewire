@@ -27,8 +27,8 @@
                         <div class="img img-fluid" style="background-image: url(log/images/bg-1.jpg);">
                         </div>
                         <div class="login-wrap p-4 p-md-5">
-                            <div class="d-flex">
-                                <div class="w-100">
+                            <div class="d-flex"> 
+                                <div class="w-100"> <br>
                                     <h3 style="font-weight: 600;">Selamat Datang</h3>
                                     <h6 style="font-weight: 100;">Silahkan masuk kedalam akun anda</h6> <br>
                                 </div>
@@ -52,25 +52,12 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                </div>
+                                </div> <br>
                                 <div class="form-group">
                                     <button type="submit" class="form-control btn btn-primary rounded submit px-3">LOG IN</button>
-                                </div>
-                                <div class="form-group d-md-flex">
-                                    <div class="w-50 text-left">
-                                        <label class="checkbox-wrap checkbox-primary mb-0">Ingat Saya
-                                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                            <span class="checkmark" for="remember"></span>
-                                        </label>
-                                    </div>
-                                    @if (Route::has('password.request'))
-                                    <div class="w-50 text-md-right">
-                                        <a href="{{ route('password.request') }}">Lupa Password</a>
-                                    </div>
-                                    @endif
-                                </div>
-                            </form>
-                            <p class="text-center">Tidak punya akun? <a data-toggle="tab" href="#signup">REGISTER</a></p>
+                                </div> <br>
+                                
+                            
                         </div>
                     </div>
                 </div>

@@ -5,10 +5,10 @@
 @section('akun-saya')
 
 <div class="margin-judul">
-    <h1>Akun Saya</h1>
+    <h1>Profil Saya</h1>
     <ol class="breadcrumb" style="background: none; padding: 10px 0px;">
-        <li><a href="#">Dashboard</a></li>
-        <li class="active">Akun Saya</li>
+        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li class="active">Profil Saya</li>
     </ol>
 </div>
 
@@ -23,14 +23,14 @@
                 </div>
                 <div class="col-md-8 sm3-card card-akun-2">
                     <div class="db-flex">
-                        <h3 style="margin: 0px;">Informasi Akun</h3>
-                        <a class="btn btn-warning fa fa-edit flex-kanan" href="{{route('profileUpdate')}}" data-toggle="tooltip" data-placement="left" title="Ubah Data Akun"></a>
+                        <h3 style="margin: 0px;">Informasi Profil</h3>
+                        <a class="btn btn-warning fa fa-edit flex-kanan" href="{{route('profileUpdate')}}" data-toggle="tooltip" data-placement="left" title="Ubah Data Profil"></a>
                     </div>
                     <hr><br>
 
                     <form>
                         <div class="form-group row" style="margin-bottom: 10px;">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Nama</label>
                             <div class="col-sm-10">
                                 <p>{{ $user->name }}</p>
                             </div>

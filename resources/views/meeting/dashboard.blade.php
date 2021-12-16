@@ -17,7 +17,7 @@
                     Management System.</b> Kamu dapat melihat<br>
                 rapat yang berlangsung dan melakukan<br>
                 presensi kehadiran disini</p> <br>
-            <a href="" class="btn btn-primary db-btn" role="button" aria-disabled="true">Presensi Sekarang</a>
+            <a href="{{ route('agendaList') }}" class="btn btn-primary db-btn" role="button" aria-disabled="true">Presensi Sekarang</a>
         </div>
         <div class="col-md-8">
             <img class="db-img" src="assets/img/db.png">

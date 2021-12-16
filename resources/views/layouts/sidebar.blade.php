@@ -21,14 +21,18 @@
                     <li>
                         <a href="{{ route('agendaList') }}" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Agenda Rapat</span></a>
                     </li>
+                    @if(Auth::User()->isAdministrator() || Auth::User()->isAdminDivisi())
                     <li>
                         <a href="{{ route('meetingList') }}" aria-expanded="false"><span class="educate-icon educate-library icon-wrap"></span> <span class="mini-click-non">Manajemen Rapat</span></a>
                     </li>
+                    @endif
+                    @if(Auth::User()->isAdministrator())
                     <li>
                         <a href="{{ route('userList') }}" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Data Pegawai</span></a>
                     </li>
+                    @endif
                     <li>
-                        <a href="{{ route('profileDetail') }}" aria-expanded="false"><span class="educate-icon educate-student icon-wrap"></span> <span class="mini-click-non">Akun Saya</span></a>
+                        <a href="{{ route('profileDetail') }}" aria-expanded="false"><span class="educate-icon educate-student icon-wrap"></span> <span class="mini-click-non">Profil Saya</span></a>
                     </li>
 
                 </ul>

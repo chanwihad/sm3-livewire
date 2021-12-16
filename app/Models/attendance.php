@@ -31,7 +31,7 @@ class attendance extends Model
 
     public static function getJumlahHadir($id)
     {
-        return Attendance::where('ref_user_id', $id)->count();
+        return Attendance::where('ref_user_id', $id)->where('status', '=', 1)->count();
     }
 
     public function tampilJam(): string
@@ -64,6 +64,8 @@ class attendance extends Model
         if ($this->status == 3) {
             return 'Izin';
         }
-
+        if($this->status == 0) {
+            return 'Alpha';
+        }
     }
 }

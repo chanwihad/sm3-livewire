@@ -117,6 +117,11 @@ class meeting extends Model
             ->first();
     }
 
+    public static function getMeetingById($id)
+    {
+        return Meeting::where('id', $id)->first();
+    }
+
     public static function getMeetingUpdate($id)
     {
         $user = \Auth::user();
@@ -228,6 +233,11 @@ class meeting extends Model
     public function tampilAbsen(): string
     {
         if (empty($this->attendances_status)) {
+            return 'Alpha';
+        }
+        $now = Carbon::now();
+        $date = Carbon::createFromFormat('Y-m-d', $this->date)->endOfDay();
+        if ($now->greaterThanOrEqualTo($date) && $this->status == self::STATUS_ACTIVE) {
             return 'Alpha';
         }
         if ($this->attendances_status == 1) {

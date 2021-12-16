@@ -10,7 +10,7 @@ class note extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id', 'meeting_id', 'notes', 'created_at', 'updated_at'
+        'id', 'meeting_id', 'notes', 'documentation','created_at', 'updated_at'
     ];
 
     public static function getNotesByMeeting($id)
