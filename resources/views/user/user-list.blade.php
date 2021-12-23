@@ -26,9 +26,9 @@
                                 <th scope="col">Aktor</th>
                                 <th scope="col">Divisi</th>
                                 <th scope="col">Jabatan</th>
-                                <th scope="col">Jumlah Kehadiran</th>
+                                <!-- <th scope="col">Jumlah Kehadiran</th>
                                 <th scope="col">Total Kehadiran</th>
-                                <th scope="col">Persentase Kehadiran</th>
+                                <th scope="col">Persentase Kehadiran</th> -->
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
@@ -40,12 +40,11 @@
                                 <td>{{ $datas->rolename }}</td>
                                 <td>{{ $datas->division }}</td>
                                 <td>{{ $datas->position }}</td>
-                                <td>03</td>
+                                <!-- <td>03</td>
                                 <td>05</td>
-                                <td>75%</td>
+                                <td>75%</td> -->
                                 <td>
                                     <a class="btn btn-warning fa fa-edit" href="{{ route('userUpdate', $datas->id) }}" data-toggle="tooltip" data-placement="bottom" title="Ubah"></a>
-                                    <a wire:click="destroy({{ $datas->id }})" class="btn btn-danger fa fa-trash" data-toggle="tooltip" title=' Delete' data-placement="bottom"></a>
                                 </td>
                             </tr>
                             @endforeach

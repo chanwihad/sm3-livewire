@@ -52,19 +52,10 @@ class UserController extends Controller
     {
         $user = \Auth::user();
         $this->authorize('manage meeting', User::class);
-        // dd($request->email);
-        // if ($user) {
-        // $data = (array) $request;
-        // $simpanUser = User::where('id', $user->id)->first();
         $update = User::updateProfile($user->id, $request->email, $request->phone);
-        // where('id', $user->id)
-        // ->update(['email' => $request->email, 'phone' => $request->phone]);
-        // $update->save();
         if ($update) {
             return redirect(route('profileDetail'))->with('success', 'Berhasil memperbarui data meeting');
         }
-        // }
-
     }
 
     public function userList()

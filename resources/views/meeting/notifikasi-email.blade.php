@@ -2,16 +2,22 @@
 <html>
 
 <head>
-    <title>websitepercobaan.com</title>
+    <title>PEMBERITAHUAN AGENDA RAPAT SMI</title>
 </head>
 
 <body>
-    <h3>Halo, {{ $nama }} !</h3>
-    <p>{{ $website }}</p>
-
-    <p>rapat woyy besok rapat jam 15.00</p>
-    <p>divisi sdm</p>
-    <p>Thank you</p>
+    <b>{{ $judul }}</b>
+    <br>
+    Kepada {{ $nama }}, <br>
+    <br>
+    Diberitahukan kepada saudara bahwa terdapat agenda rapat pada: <br>
+    Tanggal : {{ $date }} <br>
+    Jam : {{ $time }} <br>
+    Tempat : {{ $place }} <br>
+    <br>
+    Dimohon untuk hadir dan mengikuti agenda rapat tersebut. Atas perhatian dan waktunya kami ucapkan terima kasih
+    <br>
+    <b>Ket:</b> {{ $description }}
 </body>
 
 </html>

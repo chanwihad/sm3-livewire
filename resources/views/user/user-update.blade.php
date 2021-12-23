@@ -83,9 +83,9 @@
                         </div>
                         <br>
                         <button type="submit" dusk="createMeeting" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Agenda Rapat</button>
-                        <button href="{{ url()->previous() }}" class="btn btn-warning btn-kanan" role="button" aria-disabled="true">Kembali</button>
-                        <br><br>
                     </form>
+                    <button href="{{route('userList')}}" class="btn btn-warning btn-kanan" role="button" aria-disabled="true">Kembali</button>
+                    <br><br>
                 </div>
             </div>
         </div>

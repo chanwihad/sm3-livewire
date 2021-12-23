@@ -34,8 +34,12 @@ class NotifikasiEmail extends Mailable
             ->view('meeting.notifikasi-email')
             ->with(
                 [
-                    'nama' => $this->details['nama'],
-                    'website' => $this->details['website'],
+                    'judul' => $this->details['nama'],
+                    'date' => $this->details['date'],
+                    'time' => $this->details['time'],
+                    'place' => $this->details['place'],
+                    'description' => $this->details['description'],
+                    'nama'  => $this->peserta['name']
                 ]
             );
     }

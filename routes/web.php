@@ -28,7 +28,7 @@ Route::get('/attend', function () {
     return View('meeting/attend-update');
 })->name('create');
 Auth::routes();
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     
     //MEETING ROUTE
     Route::get('/', [App\Http\Controllers\MeetingController::class, 'index'])->name('dashboard');
@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
     //NOTIFIKASI ROUTE
     Route::get('/management/meeting/{id}/gmail', [App\Http\Controllers\MeetingController::class, 'notificationGmail'])->name('notificationGmail');
+    Route::post('/management/meeting/whatsapp', [App\Http\Controllers\MeetingController::class, 'notificationWhatsapp'])->name('notificationWhatsapp');
     
     //AGENDA ROUTE
     Route::get('/meeting', [App\Http\Controllers\MeetingController::class, 'agendaList'])->name('agendaList');

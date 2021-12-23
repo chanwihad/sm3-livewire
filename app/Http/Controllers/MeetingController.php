@@ -34,8 +34,6 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        // $coba = User::getDataUser();
-        // dd($coba);
         $user = \Auth::user();
         if ($user) {
             $att = Attendance::getJumlahHadir($user->id);
@@ -92,6 +90,7 @@ class MeetingController extends Controller
         $user = \Auth::user();
         if ($user->hasRole('admin') || $user->hasRole('admin divisi')) {
             $meeting = Meeting::getMeetingUpdate($Id);
+            $meeting->date = date('m/d/Y', strtotime($meeting['date']));
             if ($meeting) {
                 return view('/meeting/meeting-update', ['data' => $meeting, 'user' => $user]);
             }
@@ -105,7 +104,6 @@ class MeetingController extends Controller
         $this->authorize('manage meeting', Meeting::class);
         if ($user->hasRole('pegawai')) {
             return redirect(route('meetingList'))->with('error', 'Anda tidak memiliki akses');
-            // return abort(403, "User tidak memiliki hak akses");
         }
         $data = $request->validate([
             'title' => 'required',
@@ -117,17 +115,6 @@ class MeetingController extends Controller
             'participant' => 'required',
             'status' => 'required',
         ]);
-        // dd($data);
-        // $validator = Validator::make($request->all(), $arrValidate);
-        // if ($validator->fails()) {
-        //     return redirect(route('meetingCreate'))
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
-        // $temp = $request->except('_token');
-        // dd($arrValidate);
-        // $data = (array) $arrValidate;
-        // dd($data);
         if ($request->get('id') == null) {
             $data['id'] = \Str::uuid();
             $data['creator'] = $user->id;
@@ -199,7 +186,7 @@ class MeetingController extends Controller
         $notulensi = Note::getNotesByMeeting($id);
         return view('/meeting/meeting-detail', ['detail' => $detail, 'user' => $user, 'notulensi' => $notulensi, 'peserta' => $peserta, 'info' => 'Agenda']);
     }
-
+    
     public function absenCreate(Request $request)
     {
         $this->authorize('manage meeting', Attendance::class);
@@ -216,9 +203,9 @@ class MeetingController extends Controller
         ];
         $attendance = Attendance::attendanceSave($data);
         if ($attendance) {
-            return back()->with('success', 'Berhasil menyimpan data meeting baru');
+            return back()->with('success', 'Berhasil menyimpan data absen');
         }
-        return back()->with('error', 'Gagal memperbarui data meeting');
+        return back()->with('error', 'Gagal memperbarui data absen');
     }
 
     public function absenUpdate(Request $req)
@@ -293,321 +280,64 @@ class MeetingController extends Controller
             return back()->with('error', 'Anda tidak memiliki akses');
         }
         $meeting = Meeting::getMeetingById($id);
+        $meeting->date = date('D, d M Y', strtotime($meeting['date']));
         $participant = User::getUserParticipant($meeting->participant);
         foreach ($participant as $peserta) {
-            Mail::to($peserta->email)->send(new NotifikasiEmail($meeting, $peserta));
+            Mail::to('safitrihrdn@gmail.com')->send(new NotifikasiEmail($meeting, $peserta));
         }
-        // $details = [
-        //     'nama' => 'gocan',
-        //     'website' => 'sm3'
-        // ];
-        // $email = Mail::to("cipatgunner@gmail.com")->send(new NotifikasiEmail($details, $meeting));
-        // dd($email);
         return back()->with('success', 'Berhasil mengirim pemberitahuan melalui Email');
-        // dd($participant);
     }
 
-
-
-
-
-
-    public function simpanNotulensi(Request $request)
+    public function notificationWhatsapp(Request $request)
     {
         $user = \Auth::user();
-        $this->authorize('manage meeting', Note::class);
+        $this->authorize('manage meeting', Meeting::class);
         if ($user->hasRole('pegawai')) {
-            return redirect(route('meetingList'))->with('error', 'Anda tidak memiliki akses');
-            // return abort(403, "User tidak memiliki hak akses");
+            return back()->with('error', 'Anda tidak memiliki akses');
         }
-        $arrValidate = [
-            'notes' => 'required',
-        ];
-        $validator = Validator::make($request->all(), $arrValidate);
-        if ($validator->fails()) {
-            return redirect(route('buatNotulensi'))
-                ->withErrors($validator)
-                ->withInput();
-        }
-        $data = $request->toArray();
-        if ($request->get('id') == null) {
-            /** @var Note $note */
-            $notulensi = Note::create($data);
-            if ($note) {
-                return redirect(route('daftarMeeting'))->with('success', 'Berhasil menyimpan data notulensi baru');
-            }
-            return redirect(route('daftarMeeting'))->with('error', 'Gagal menyimpan data notulensi baru');
-        } else {
-            $notulensi = Note::where('id', $request->get('id'))->first();
-            if ($notulensi->update($data)) {
-                return redirect(route('daftarMeeting'))->with('success', 'Berhasil memperbarui data notulensi');
-            }
-            return redirect(route('daftarMeeting'))->with('error', 'Gagal memperbarui data notulensi');
-        }
-    }
+        $meeting = Meeting::getMeetingById($request->id);
+        $participant = User::getUserParticipant($meeting->participant);
+        foreach ($participant as $peserta) {
+            $curl = curl_init();
+            $token = "IHN3mgZlvZOLVUnFx5cTOrcbL3zp0FnlH9U0YDyJlrXFTa6UFoeLK1jCu9VUF11m";
+            $payload = [
+                "data" => [
+                    [
+                        'phone' => $peserta->phone,
+                        'message' => 'PEMBERITAHUAN AGENDA RAPAT SMI
+Kepada '.$peserta->name.', 
+                        
+Diberitahukan kepada saudara bahwa terdapat agenda rapat pada: 
+Tanggal : '.$meeting->date.'
+Jam : '.$meeting->time.'
+Tempat : '.$meeting->place.' 
 
-    public function cekNotulensi(String $Id)
-    {
-        $user = \Auth::user();
-        $this->authorize('manage meeting', Note::class);
-        $data = Note::where('id', $Id)->first();
-        if ($data) {
-            return view('/meeting/cek-notulensi', ['data' => $data]);
-        }
-        return abort(404, "Notulensi tidak ditemukan");
-    }
+Dimohon untuk hadir dan mengikuti agenda rapat tersebut. Atas perhatian dan waktunya kami ucapkan terima kasih
 
-    public function ubahNotulensi(String $Id)
-    {
-        $user = \Auth::user();
-        $this->authorize('manage meeting', Note::class);
-        if ($user->hasRole('admin') || $user->hasRole('admin divisi')) {
-            $notulensi = Note::where('id', $Id)->first();
-        }
-        if ($notulensi) {
-            return view('meeting/ubah-notulensi', ['data' => $notulensi]);
-        }
-        return abort(404, "Notulensi tidak ditemukan");
-    }
-
-    public function absenMeeting(String $Id)
-    {
-        $user = \Auth::user();
-        $data = Meeting::where('id', $Id)->first();
-        return view('meeting/absen-meeting', [
-            'data' => $data,
-            'user' => $user
-        ]);
-    }
-
-    public function konfirmasi1(Request $request, String $Id)
-    {
-        $user = \Auth::user();
-        $arrValidate = [
-            'id_meeting' => 'required',
-            'status' => 'required',
-        ];
-        $validator = Validator::make($request->all(), $arrValidate);
-        if ($validator->fails()) {
-            return redirect(route('absenMeeting'))
-                ->withErrors($validator)
-                ->withInput();
-        }
-        $data = $request->toArray();
-        $data['id'] = \Str::uuid();
-        $data['time'] = $data['time_start'] . (empty($data['time_end']) ?: ' - ' . $data['time_end']) . " " . $data['zona_waktu'];
-        if ($request->get('id') == null) {
-            /** @var Meeting $meeting */
-            $meeting = Meeting::create($data);
-            if ($meeting) {
-                return redirect(route('daftarMeeting'))->with('success', 'Berhasil menyimpan data meeting baru');
-            }
-            return redirect(route('daftarMeeting'))->with('error', 'Gagal menyimpan data meeting baru');
-        } else {
-            $meeting = Meeting::where('id', $request->get('id'))->first();
-            if ($meeting->update($data)) {
-                return redirect(route('daftarMeeting'))->with('success', 'Berhasil memperbarui data meeting');
-            }
-            return redirect(route('daftarMeeting'))->with('error', 'Gagal memperbarui data meeting');
-        }
-    }
-
-    public function konfirmasi(Request $req, string $id)
-    {
-        /**
-         * @var User $user
-         * @var Event $event
-         */
-        $user = \Auth::user();
-        $event = $req->event;
-        if ($user->alreadyConfirmedOn($event->id)) {
-            return view('events/konfirmasi-finished', [
-                'event' => $event,
-                'user' => $user
-            ]);
-        }
-
-        return view('events/konfirmasi', [
-            'event' => $event,
-            'user' => $user
-        ]);
-    }
-
-    public function saveKonfirmasi(Request $req, string $id)
-    {
-        /** @var Event $event */
-        /** @var User $user */
-        $user = \Auth::user();
-        $event = $req->event;
-
-        $requirements = [
-            'paraf' => 'required',
-        ];
-
-        if ($event->hasPasscode()) {
-            $id = $event->id;
-            $passcode = $req->post('passcode');
-            $requirements['passcode'] = [
-                'required',
-                Rule::exists('events')
-                    ->where(function ($query) use ($id, $passcode) {
-                        return $query
-                            ->where('id', $id)
-                            ->where('passcode', $passcode);
-                    }),
+Ket: '.$meeting->description,
+                        'secret' => false,
+                        'priority' => false,
+                    ]
+                ]
             ];
+            curl_setopt(
+                $curl,
+                CURLOPT_HTTPHEADER,
+                array(
+                    "Authorization: $token",
+                    "Content-Type: application/json"
+                )
+            );
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($curl, CURLOPT_URL, "https://sawit.wablas.com/api/v2/send-bulk/text");
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+            curl_close($curl);
         }
-    }
-
-    public function registrasi(Request $req, string $id)
-    {
-        /**
-         * @var User $user
-         * @var Event $event
-         */
-        $user = \Auth::user();
-        $event = $req->event;
-        if ($user->alreadyRegisteredOn($event->id)) {
-            return view('events/registrasi-finished', [
-                'event' => $event,
-                'user' => $user
-            ]);
-        }
-
-        return view('events/registrasi', [
-            'event' => $event,
-            'user' => $user
-        ]);
-    }
-
-    public function saveRegistrasi(Request $req, string $id)
-    {
-        /** @var Event $event */
-        /** @var User $user */
-        $user = \Auth::user();
-        $event = $req->event;
-
-        $reg = new EventRegistration();
-        $reg->event_id = $event->id;
-        $reg->ref_user_id = $user->id;
-        $reg->name = $user->name;
-        $reg->email = $user->email;
-        $reg->organisasi = $user->getNamaOrganisasi();
-        $reg->jabatan = $user->getNamaJabatan();
-        $reg->registered = true;
-        $reg->save();
-        event(new RegistrasiCreated($reg));
-
-        return redirect('event/registrasi/' . $event->id);
+        dd($result);
+        return back()->with('success', 'Berhasil mengirim pemberitahuan melalui Email');
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// public function __construct()
-//     {
-//         $this->middleware('auth');
-//         // $this->middleware(function (Request $req, $next) {
-//         //     $id = $req->route('id');
-//         //     if (!empty($id)) {
-//         //         if (!Uuid::isValid($id)) {
-//         //             throw new NotFoundHttpException('Meeting Not Found');
-//         //         }
-
-//         //         $meeting = Meeting::find($id);
-//         //         if (!$meeting) {
-//         //             throw new NotFoundHttpException('Meeting Not Found');
-//         //         }
-
-//         //         $req->merge(['meeting' => $meeting]);
-
-//         //         return $next($req);
-//         //     }
-//         //     return $next($req);
-//         // });
-
-//         //     $id = $this->route('id');
-//         // dd($id);
-//     }
-
-//     /**
-//      * Show the application dashboard.
-//      *
-//      * @return \Illuminate\Contracts\Support\Renderable
-//      */
-//     public function index() //Request $req)
-//     {
-//         // return view('home');
-//         // $daftarmeeting = Meeting::all();
-//         // $daftarmeeting = $req->meeting;
-//         // dd($daftarmeeting);
-//         // $user = \Auth::user();
-//         // dd($user->division);
-
-//         // $user = \App\Models\User::where('id',1)->first();
-//         // if($user) {
-//         //     $user->assignRole('admin');
-//         // }
-//         // $this->authorize('manage role', User::class);
-//         // $ubahuser1 = User::where('id', 1)->first();
-//         // $ubahuser1->assignRole('admin');
-//         // $ubahuser2 = User::where('id', 2)->first();
-//         // $ubahuser2->assignRole('admin divisi');
-//         // $ubahuser3 = User::where('id', 3)->first();
-//         // $ubahuser3->assignRole('pegawai');
-//         if (\Auth::user()) {
-//             return view('meeting.dashboard', [
-//                 'data' => Meeting::all(),
-//                 'user' => \Auth::user()
-//             ]);
-//         }
-//         // $user = \Auth::user();
-//         // if ($user->hasRole('admin')) {
-//         //     $this->authorize('manage meeting', User::class);
-//         //     $data = Meeting::
-//         //     orderBy('created_at', 'asc')
-//         //     ->paginate(10);
-//         //     dd($data);
-//         //     return view('/user/admin/ubah-user', ['data' => $data, 'user' => $user]);
-//         // } else if ($user->hasRole('admin divisi')) {
-//         //     $this->authorize('manage meeting', User::class);
-//         //     $data = Meeting::
-//         //     where('creator', $user->id)
-//         //     ->orWhere('participant', 'like', 'semua')
-//         //     ->orWhere('participant', 'like', $user->division)
-//         //     // ->orWhere('participant', 'ilike', '%'.$user->id.'%')
-//         //     ->orderBy('created_at', 'asc')
-//         //     ->paginate(10);
-//         //     dd($data);
-//         //     return view('?????', ['data' => $data, 'user' => $user]);
-//         // } else if ($user->hasRole('pegawai')) {
-//         //     $data = Meeting::
-//         //     Where('participant', 'like', 'semua')
-//         //     ->orWhere('participant', 'like', $user->division)
-//         //     ->orderBy('created_at', 'asc')
-//         //     ->paginate(10);
-//         //     dd($data);
-//         //     return view('????', ['data' => $data, 'user' => $user]);
-//         // }
-//         // return abort(404, "User tidak ditemukan");
-//     }

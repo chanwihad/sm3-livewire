@@ -125,16 +125,22 @@
                 </div> <br>
 
                 <!-- Button share muncul jika aktor adalah admin divisi / administrator -->
-
-                <div class="db-flex btn-kanan" style="column-gap: 0px;">
-                    <span class="input-group-addon span-share"><i class="fab fa-whatsapp"></i></span>
-                    <a class="btn btn-primary btn-share" href="">WhatsApp</a>
-                </div>
+                @if($user->isAdministrator() || $user->isAdminDivisi())
+                <form action="{{route('notificationWhatsapp')}}" method="post">
+                    @csrf
+                    <input type="hidden" name="id" id="id" value="{{$detail->id}}" />
+                    <div class="db-flex btn-kanan" style="column-gap: 0px;">
+                        <span class="input-group-addon span-share"><i class="fab fa-whatsapp"></i></span>
+                        <button type="submit" class="btn btn-primary btn-share" role="button" aria-disabled="true">WhatsApp</button>
+                    </div>
+                </form>
                 <div class="db-flex btn-kanan" style="column-gap: 0px;">
                     <span class="input-group-addon span-share"><i class="far fa-envelope"></i></span>
                     <a class="btn btn-primary btn-share" href="{{ route('notificationGmail', $detail->id) }}">E-Mail</a>
                 </div>
                 <p class="btn-kanan" style="padding: 10px;">Bagikan Via</p><br> <br>
+                @else
+                @endif
             </div>
         </div>
     </div>
@@ -175,7 +181,7 @@
 
                 <div class="card card-desc">
                     <h5>Dokumentasi Foto : </h5>
-                    <img class="card-img-top" @isset($notulensi->documentation) src="storage/{{ $notulensi->documentation }}" @endisset>
+                    <img class="card-img-top" @isset($notulensi->documentation) src="{{ URL::asset('storage/'.$notulensi->documentation.'') }}" @endisset>
                 </div>
             </div>
         </div>

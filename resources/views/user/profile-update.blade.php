@@ -61,7 +61,7 @@
                         </div>
                         <br>
                         <button type="submit" dusk="createMeeting" class="btn btn-primary btn-kanan" role="button" aria-disabled="true">Simpan Profil</button>
-                        <button href="{{ url()->previous() }}" class="btn btn-warning btn-kanan" aria-disabled="true">Kembali</button>
+                        <button href="{{ route('profileDetail') }}" class="btn btn-warning btn-kanan" aria-disabled="true">Kembali</button>
                         <br><br>
                     </div>
                 </div>
