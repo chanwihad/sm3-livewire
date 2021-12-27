@@ -15,6 +15,7 @@ use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Str;
 
 use App\Mail\NotifikasiEmail;
 use Illuminate\Support\Facades\Mail;
@@ -81,7 +82,7 @@ class MeetingController extends Controller
         if ($user->hasRole('admin') || $user->hasRole('admin divisi')) {
             return view('/meeting/meeting-create', ['user' => $user]);
         }
-        return back()->with('error', 'Anda tidak memiliki akses');
+        return back()->with('warning', 'Anda tidak memiliki akses');
     }
 
     public function meetingUpdate(String $Id)
@@ -103,7 +104,7 @@ class MeetingController extends Controller
         $user = \Auth::user();
         $this->authorize('manage meeting', Meeting::class);
         if ($user->hasRole('pegawai')) {
-            return redirect(route('meetingList'))->with('error', 'Anda tidak memiliki akses');
+            return redirect(route('meetingList'))->with('warning', 'Anda tidak memiliki akses');
         }
         $data = $request->validate([
             'title' => 'required',
@@ -129,13 +130,13 @@ class MeetingController extends Controller
             if ($meeting) {
                 return redirect(route('meetingList'))->with('success', 'Berhasil menyimpan data meeting baru');
             }
-            return redirect(route('meetingList'))->with('error', 'Gagal menyimpan data meeting baru');
+            return redirect(route('meetingList'))->with('warning', 'Gagal menyimpan data meeting baru');
         } else {
             $meeting = Meeting::meetingSaveUpdate($data, $request->get('id'));
             if ($meeting) {
                 return redirect(route('meetingList'))->with('success', 'Berhasil memperbarui data meeting');
             }
-            return redirect(route('meetingList'))->with('error', 'Gagal memperbarui data meeting');
+            return redirect(route('meetingList'))->with('warning', 'Gagal memperbarui data meeting');
         }
     }
 
@@ -143,7 +144,7 @@ class MeetingController extends Controller
     {
         $user = \Auth::user();
         if ($user->hasRole('pegawai')) {
-            return redirect(route('meetingList'))->with('error', 'Anda tidak memiliki akses');
+            return redirect(route('meetingList'))->with('warning', 'Anda tidak memiliki akses');
             // return abort(403, "User tidak memiliki hak akses");
         } else {
             alert()->question('Apakah anda yakin', 'Untuk Menghapus Data Pegawai ini?')
@@ -152,7 +153,7 @@ class MeetingController extends Controller
 
             return redirect(route('meetingList'));
         }
-        return redirect(route('meetingList'))->with('error', 'Gagal menghapus data meeting');
+        return redirect(route('meetingList'))->with('warning', 'Gagal menghapus data meeting');
     }
 
     public function meetingDelete($Id)
@@ -163,7 +164,7 @@ class MeetingController extends Controller
             return redirect(route('meetingList'))->with('success', 'Berhasil menghapus data meeting');
         }
 
-        return redirect(route('meetingList'))->with('error', 'Gagal menghapus data meeting');
+        return redirect(route('meetingList'))->with('warning', 'Gagal menghapus data meeting');
     }
 
     public function agendaList()
@@ -186,7 +187,7 @@ class MeetingController extends Controller
         $notulensi = Note::getNotesByMeeting($id);
         return view('/meeting/meeting-detail', ['detail' => $detail, 'user' => $user, 'notulensi' => $notulensi, 'peserta' => $peserta, 'info' => 'Agenda']);
     }
-    
+
     public function absenCreate(Request $request)
     {
         $this->authorize('manage meeting', Attendance::class);
@@ -205,7 +206,7 @@ class MeetingController extends Controller
         if ($attendance) {
             return back()->with('success', 'Berhasil menyimpan data absen');
         }
-        return back()->with('error', 'Gagal memperbarui data absen');
+        return back()->with('warning', 'Gagal memperbarui data absen');
     }
 
     public function absenUpdate(Request $req)
@@ -255,7 +256,7 @@ class MeetingController extends Controller
         $user = \Auth::user();
         $this->authorize('manage meeting', Note::class);
         if ($user->hasRole('pegawai')) {
-            return back()->with('error', 'Anda tidak memiliki akses');
+            return back()->with('warning', 'Anda tidak memiliki akses');
         }
         $data = $request->validate([
             'notes' => 'required',
@@ -277,24 +278,23 @@ class MeetingController extends Controller
         $user = \Auth::user();
         $this->authorize('manage meeting', Meeting::class);
         if ($user->hasRole('pegawai')) {
-            return back()->with('error', 'Anda tidak memiliki akses');
+            return back()->with('warning', 'Anda tidak memiliki akses');
         }
         $meeting = Meeting::getMeetingById($id);
         $meeting->date = date('D, d M Y', strtotime($meeting['date']));
         $participant = User::getUserParticipant($meeting->participant);
-        foreach ($participant as $peserta) {
-            Mail::to('safitrihrdn@gmail.com')->send(new NotifikasiEmail($meeting, $peserta));
+        if ($participant) {
+            foreach ($participant as $peserta) {
+                Mail::to('safitriherdian28@gmail.com')->send(new NotifikasiEmail($meeting, $peserta));
+            }
+            return back()->with('success', 'Berhasil mengirim pemberitahuan melalui Email');
         }
-        return back()->with('success', 'Berhasil mengirim pemberitahuan melalui Email');
+        return back()->with('warning', 'Gagal mengirim pemberitahuan melalui Email');
     }
 
     public function notificationWhatsapp(Request $request)
     {
-        $user = \Auth::user();
         $this->authorize('manage meeting', Meeting::class);
-        if ($user->hasRole('pegawai')) {
-            return back()->with('error', 'Anda tidak memiliki akses');
-        }
         $meeting = Meeting::getMeetingById($request->id);
         $participant = User::getUserParticipant($meeting->participant);
         foreach ($participant as $peserta) {
@@ -305,16 +305,16 @@ class MeetingController extends Controller
                     [
                         'phone' => $peserta->phone,
                         'message' => 'PEMBERITAHUAN AGENDA RAPAT SMI
-Kepada '.$peserta->name.', 
+Kepada ' . $peserta->name . ', 
                         
 Diberitahukan kepada saudara bahwa terdapat agenda rapat pada: 
-Tanggal : '.$meeting->date.'
-Jam : '.$meeting->time.'
-Tempat : '.$meeting->place.' 
+Tanggal : ' . $meeting->date . '
+Jam : ' . $meeting->time . '
+Tempat : ' . $meeting->place . ' 
 
 Dimohon untuk hadir dan mengikuti agenda rapat tersebut. Atas perhatian dan waktunya kami ucapkan terima kasih
 
-Ket: '.$meeting->description,
+Ket: ' . $meeting->description,
                         'secret' => false,
                         'priority' => false,
                     ]
@@ -331,13 +331,15 @@ Ket: '.$meeting->description,
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
-            curl_setopt($curl, CURLOPT_URL, "https://sawit.wablas.com/api/v2/send-bulk/text");
+            curl_setopt($curl, CURLOPT_URL, "https://wablas.com/api/v2/send-bulk/text");
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             $result = curl_exec($curl);
             curl_close($curl);
         }
-        dd($result);
-        return back()->with('success', 'Berhasil mengirim pemberitahuan melalui Email');
+        if (Str::contains($result, 'true')) {
+            return back()->with('success', 'Berhasil mengirim pemberitahuan melalui Whatsapp');
+        }
+        return back()->with('warning', 'Gagal mengirim pemberitahuan melalui Whatsapp');
     }
 }

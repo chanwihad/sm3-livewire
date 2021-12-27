@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 class NotifikasiEmail extends Mailable
 {
     use Queueable, SerializesModels;
-
+        
     /**
      * Create a new message instance.
      *

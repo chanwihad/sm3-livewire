@@ -54,8 +54,9 @@ class UserController extends Controller
         $this->authorize('manage meeting', User::class);
         $update = User::updateProfile($user->id, $request->email, $request->phone);
         if ($update) {
-            return redirect(route('profileDetail'))->with('success', 'Berhasil memperbarui data meeting');
+            return redirect(route('profileDetail'))->with('success', 'Berhasil memperbarui data profil');
         }
+        return back()->with('warning', 'Gagal memperbarui data profil');
     }
 
     public function userList()
